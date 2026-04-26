@@ -5,13 +5,6 @@ RaceBox EzzTech adalah aplikasi GPS drag timer untuk test performa kendaraan.
 ## Developer
 Powered By : faizyh
 
-## Update Utama
-- Tampilan UI dibuat lebih rapi dan premium
-- Padding setiap kotak/card dirapikan
-- Judul tiap section dibuat lebih tebal/bold
-- Teks `RED • BLACK • SILVER` dihapus dari header
-- Struktur project sudah signing-ready untuk build APK release
-
 ## Fitur Aplikasi
 - GPS speed realtime dari sensor lokasi HP
 - Test akselerasi:
