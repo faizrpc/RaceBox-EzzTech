@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RaceBox EzzTech - Performance Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">&#9201;</span>
+        <div>
+          <h1>RaceBox <span class="accent">EzzTech</span></h1>
+          <p class="subtitle">Performance Analytics Dashboard</p>
+        </div>
+      </div>
+      <div class="powered-by">Powered By: faizyh</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Upload Section -->
+    <section id="upload-section" class="card">
+      <div id="drop-zone" class="drop-zone">
+        <div class="drop-zone-content">
+          <span class="drop-icon">&#128194;</span>
+          <p>Drag & drop CSV files here or <label for="file-input" class="file-label">browse</label></p>
+          <input type="file" id="file-input" accept=".csv" multiple hidden>
+          <p class="hint">Export CSV from the RaceBox EzzTech app and upload here</p>
+        </div>
+      </div>
+      <div id="file-list" class="file-list"></div>
+      <button id="load-demo-btn" class="btn btn-secondary">Load Demo Data</button>
+    </section>
+
+    <!-- Tab Navigation -->
+    <nav id="tab-nav" class="tab-nav hidden">
+      <button class="tab-btn active" data-tab="overview">Overview</button>
+      <button class="tab-btn" data-tab="compare">Compare Runs</button>
+      <button class="tab-btn" data-tab="trends">Trends</button>
+      <button class="tab-btn" data-tab="history">History</button>
+    </nav>
+
+    <!-- Overview Tab -->
+    <section id="tab-overview" class="tab-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Runs</div>
+          <div class="stat-value" id="stat-total-runs">--</div>
+        </div>
+        <div class="stat-card highlight">
+          <div class="stat-label">Best 0-100 km/h</div>
+          <div class="stat-value" id="stat-best-0-100">--</div>
+        </div>
+        <div class="stat-card highlight">
+          <div class="stat-label">Best 0-60 km/h</div>
+          <div class="stat-value" id="stat-best-0-60">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Best 402m</div>
+          <div class="stat-value" id="stat-best-402">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Best 201m</div>
+          <div class="stat-value" id="stat-best-201">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Top Speed</div>
+          <div class="stat-value" id="stat-top-speed">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Reaction Time</div>
+          <div class="stat-value" id="stat-avg-reaction">--</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Consistency Score</div>
+          <div class="stat-value" id="stat-consistency">--</div>
+        </div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-container card">
+          <h3>Latest Run - Speed vs Time</h3>
+          <canvas id="chart-latest-run"></canvas>
+        </div>
+        <div class="chart-container card">
+          <h3>Personal Bests</h3>
+          <canvas id="chart-personal-bests"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compare Runs Tab -->
+    <section id="tab-compare" class="tab-content hidden">
+      <div class="card">
+        <h3>Select Runs to Compare</h3>
+        <div class="compare-controls">
+          <div id="run-checkboxes" class="run-checkboxes"></div>
+          <button id="compare-btn" class="btn">Compare Selected</button>
+        </div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-container card">
+          <h3>Speed vs Time Overlay</h3>
+          <canvas id="chart-compare-speed"></canvas>
+        </div>
+        <div class="chart-container card">
+          <h3>Acceleration Comparison</h3>
+          <canvas id="chart-compare-accel"></canvas>
+        </div>
+      </div>
+      <div id="compare-stats" class="card hidden">
+        <h3>Comparison Summary</h3>
+        <div id="compare-table-container"></div>
+      </div>
+    </section>
+
+    <!-- Trends Tab -->
+    <section id="tab-trends" class="tab-content hidden">
+      <div class="card">
+        <h3>Metric to Track</h3>
+        <div class="trend-controls">
+          <select id="trend-metric" class="select">
+            <option value="time_0_100">0-100 km/h Time</option>
+            <option value="time_0_60">0-60 km/h Time</option>
+            <option value="time_0_30">0-30 km/h Time</option>
+            <option value="time_201m">201m Time</option>
+            <option value="time_402m">402m Time</option>
+            <option value="top_speed">Top Speed</option>
+            <option value="reaction_time">Reaction Time</option>
+          </select>
+          <label class="tag-label">
+            Filter by tag:
+            <select id="trend-tag-filter" class="select">
+              <option value="">All runs</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="chart-container card">
+        <h3 id="trend-chart-title">Performance Over Time</h3>
+        <canvas id="chart-trend"></canvas>
+      </div>
+    </section>
+
+    <!-- History Tab -->
+    <section id="tab-history" class="tab-content hidden">
+      <div class="card">
+        <div class="history-controls">
+          <input type="text" id="history-search" class="input" placeholder="Search runs...">
+          <button id="tag-selected-btn" class="btn btn-secondary">Tag Selected</button>
+          <button id="delete-selected-btn" class="btn btn-danger">Delete Selected</button>
+        </div>
+        <div class="table-wrapper">
+          <table id="history-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all"></th>
+                <th class="sortable" data-sort="date">Date</th>
+                <th class="sortable" data-sort="time_0_60">0-60</th>
+                <th class="sortable" data-sort="time_0_100">0-100</th>
+                <th class="sortable" data-sort="time_201m">201m</th>
+                <th class="sortable" data-sort="time_402m">402m</th>
+                <th class="sortable" data-sort="top_speed">Top Speed</th>
+                <th class="sortable" data-sort="reaction_time">Reaction</th>
+                <th>Tags</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tag Modal -->
+    <div id="tag-modal" class="modal hidden">
+      <div class="modal-content card">
+        <h3>Add Tags</h3>
+        <div class="tag-inputs">
+          <input type="text" id="tag-input" class="input" placeholder="e.g., Rain, Stock, Premium fuel">
+          <p class="hint">Separate multiple tags with commas</p>
+        </div>
+        <div class="modal-actions">
+          <button id="tag-save-btn" class="btn">Save Tags</button>
+          <button id="tag-cancel-btn" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>RaceBox EzzTech Performance Dashboard &mdash; Powered By: faizyh</p>
+  </footer>
+
+  <script src="csv-parser.js"></script>
+  <script src="charts.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
